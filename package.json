@@ -8,7 +8,7 @@
     "dev": "nodemon src/index.js",
     "final": "node final/index.js",
     "seed": "node final/util/seed/index.js",
-    "test": "nodemon solutions/07-Details/index.js",
+    "test": "node solutions/07-Details/index.js",
     "lint": "eslint \"src/**/*.js\""
   },
   "repository": {
