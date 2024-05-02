@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {
   AuthenticationError,
@@ -122,7 +122,10 @@ module.exports = {
     // normalize email address
     email = email.trim().toLowerCase();
     // hash the password
-    const hashed = await bcrypt.hash(password, 10);
+    //const hashed = await bcrypt.hash(password, 10);
+    const hashed = Buffer.from(password).toString('base64');
+
+
     // create the gravatar url
     const avatar = gravatar(email);
     try {
@@ -146,6 +149,7 @@ module.exports = {
       // normalize email address
       email = email.trim().toLowerCase();
     }
+
     const user = await models.User.findOne({
       $or: [{ email }, { username }]
     });
@@ -156,9 +160,17 @@ module.exports = {
     }
 
     // if the passwords don't match, throw an authentication error
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) {
-      throw new AuthenticationError('Error signing in');
+    //const valid = await bcrypt.compare(password, user.password);
+    //if (!valid) {
+    //  throw new AuthenticationError('Error signing in');
+    //}
+
+    // Base64 encode the password input by the user
+    const encodedPassword = Buffer.from(password).toString('base64');
+
+    // Compare the base64 encoded password with the stored password
+    if (encodedPassword !== user.password) {
+        throw new AuthenticationError('Error signing in');
     }
 
     // create and return the json web token
